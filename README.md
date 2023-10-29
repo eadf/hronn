@@ -9,4 +9,4 @@
 An experimental CNC toolpath generator/mesh sampler. Work in progress.
 
 ## License
-AGPL 3.0
+AGPL-3.0-or-later
