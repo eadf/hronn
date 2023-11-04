@@ -12,9 +12,8 @@ thiserror = "1.0.50"
 vob="3.0.3"
 rayon = "1.8.0"
 itertools = "0.11.0"
-ahash = "0.8.6"
 smallvec = "1.11.1"
-linestring = "0.10.1"
+linestring = "0.10.2"
 vector-traits = { version = "0.2.0", features = ["glam"] }
 spade = "2.2.0"
 krakel = {version = "0.2.0", features = ["glam"]}
@@ -22,7 +21,6 @@ krakel = {version = "0.2.0", features = ["glam"]}
 [features]
 default = ["glam"]
 glam = ["vector-traits/glam"] # nothing will work without this at the moment
-#cgmath = ["vector-traits/cgmath"]
 
 [dev-dependencies]
 criterion = "0.5.1"

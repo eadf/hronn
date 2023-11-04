@@ -21,12 +21,8 @@
 )]
 #![warn(clippy::explicit_into_iter_loop)]
 
-use crate::prelude::{ConvertTo, MaximumTracker};
-use ahash::AHashSet;
+use crate::prelude::ConvertTo;
 use linestring::linestring_2d::{convex_hull, Aabb2, LineString2};
-use smallvec::SmallVec;
-use std::cmp::Reverse;
-use std::collections::HashMap;
 use vector_traits::num_traits::real::Real;
 use vector_traits::{GenericScalar, GenericVector2, GenericVector3, HasXYZ};
 
@@ -195,132 +191,6 @@ where
     } else {
         n
     }
-}
-
-/// Constructs a continuous loop of vertex indices from an unordered list of edges.
-///
-/// This function takes as input a slice of `usize` that represents edges by pairing
-/// consecutive values. For example, a slice `[a, b, c, d]` represents two edges: `a-b` and `c-d`.
-///
-/// # Arguments
-///
-/// * `edges` - A slice of vertex indices, where each consecutive pair represents an edge.
-///             The slice's length should be even.
-///
-/// # Returns
-///
-/// * If successful, a vector of vertex indices that forms a continuous loop.
-/// * If unsuccessful, a `CollisionError` indicating the nature of the error.
-///
-/// # Example
-///
-/// ```rust,ignore
-/// let edges = [1, 0, 2, 1, 3, 2, 0, 3];
-/// let loop_indices = continuous_loop_from_unordered_edges(&edges)?;
-/// assert_eq!(loop_indices, vec![1, 0, 3, 2, 1]);
-/// ```
-///
-/// # Errors
-///
-/// This function may return an error in the following scenarios:
-///
-/// * The input edge list is malformed or does not form a valid loop.
-/// * There are missing vertices in the adjacency map.
-///
-/// # Note
-///
-/// The function assumes that the input edge list is valid, i.e., forms a closed loop
-/// without isolated vertices or unconnected components.
-pub fn reconstruct_from_unordered_edges(edges: &[usize]) -> Result<Vec<usize>, HronnError> {
-    let mut lowest_index = MaximumTracker::<Reverse<usize>>::default();
-
-    if edges.len() < 2 {
-        return Err(HronnError::InvalidParameter(
-            "The line segment should have at least 2 vertices.".to_string(),
-        ));
-    }
-
-    let mut adjacency: HashMap<usize, SmallVec<[usize; 2]>> = HashMap::new();
-    for chunk in edges.chunks(2) {
-        let a = chunk[0];
-        let b = chunk[1];
-        lowest_index.insert(Reverse(a));
-        lowest_index.insert(Reverse(b));
-
-        adjacency.entry(a).or_default().push(b);
-        adjacency.entry(b).or_default().push(a);
-
-        // Check for more than two neighbors and handle error
-        if adjacency.get(&a).unwrap().len() > 2 || adjacency.get(&b).unwrap().len() > 2 {
-            return Err(HronnError::InvalidParameter(
-                "More than two neighbors for a vertex in a loop.".to_string(),
-            ));
-        }
-    }
-
-    // Detect endpoints (vertices with only one neighbor)
-    let endpoints: Vec<_> = adjacency
-        .iter()
-        .filter(|(_, neighbors)| neighbors.len() == 1)
-        .map(|(&vertex, _)| vertex)
-        .collect();
-
-    let is_loop = endpoints.is_empty();
-
-    let mut current = if is_loop {
-        // Start at lowest index for a loop
-        lowest_index.get_max().unwrap().0
-    } else {
-        // Start at one of the endpoints for a line
-        endpoints[0].min(endpoints[1])
-    };
-    let starting_point = current;
-
-    let mut visited = AHashSet::new();
-    let _ = visited.insert(current);
-    let mut reconstructed = vec![current];
-
-    let next_neighbors = &adjacency[&current];
-    if (is_loop && next_neighbors.len() != 2) || (!is_loop && next_neighbors.len() > 1) {
-        return Err(HronnError::InvalidParameter(
-            "The provided line segment has more than two adjacent vertices.".to_string(),
-        ));
-    }
-
-    if is_loop {
-        current = next_neighbors[0].min(next_neighbors[1]);
-    } else {
-        current = next_neighbors[0]
-    }
-    reconstructed.push(current);
-    let _ = visited.insert(current);
-    loop {
-        let next_neighbors: Vec<_> = adjacency[&current]
-            .iter()
-            .filter(|&n| !visited.contains(n))
-            .collect();
-
-        // Exit conditions
-        if next_neighbors.is_empty() {
-            break;
-        }
-
-        if next_neighbors.len() > 1 {
-            return Err(HronnError::InvalidParameter(
-                "The provided line segment have more than two adjacent vertices.".to_string(),
-            ));
-        }
-
-        current = *next_neighbors[0];
-        reconstructed.push(current);
-        let _ = visited.insert(current);
-    }
-    // Add the starting point for a loop after the while loop.
-    if is_loop {
-        reconstructed.push(starting_point);
-    }
-
-    Ok(reconstructed)
 }
 
 /// Build a convex hull from the point cloud, then build an AABB from that.
