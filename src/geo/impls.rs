@@ -31,7 +31,7 @@ where
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fn format_float<F>(value: F) -> String
         where
-            F: Real + Display,
+            F: Float + Display,
         {
             if value.fract().is_zero() {
                 format!("{:.1}", value)

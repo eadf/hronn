@@ -15,7 +15,7 @@ use crate::{
     HronnError, ProbeMode,
 };
 use krakel::PointTrait;
-use linestring::linestring_2d::{Aabb2, LineString2};
+use linestring::linestring_2d::Aabb2;
 #[allow(unused_imports)]
 use rayon::prelude::*;
 use spade::{DelaunayTriangulation, Triangulation};
@@ -30,7 +30,7 @@ where
     MESH: ConvertTo<T>,
 {
     aabb: Option<Aabb2<T::Vector2>>,
-    convex_hull: Option<LineString2<T::Vector2>>,
+    convex_hull: Option<Vec<T::Vector2>>,
     step: Option<T::Scalar>,
     #[doc(hidden)]
     _pd: PhantomData<MESH>,
@@ -44,7 +44,7 @@ where
 {
     pub fn new(
         aabb: Aabb2<T::Vector2>,
-        convex_hull: LineString2<T::Vector2>,
+        convex_hull: Vec<T::Vector2>,
         step: T::Scalar,
     ) -> Result<Self, HronnError> {
         Ok(Self {
@@ -55,7 +55,7 @@ where
         })
     }
 
-    pub fn convex_hull(mut self, convex_hull: LineString2<T::Vector2>) -> Result<Self, HronnError> {
+    pub fn convex_hull(mut self, convex_hull: Vec<T::Vector2>) -> Result<Self, HronnError> {
         self.convex_hull = Some(convex_hull);
         Ok(self)
     }
@@ -235,7 +235,6 @@ where
 
         // sample along the convex hull
         let convex_hull: Vec<MESH> = convex_hull
-            .0
             .iter()
             .map(|v| {
                 let r = search_fn(self, context, *v, &qp, collision_fn)

@@ -19,7 +19,7 @@ use vector_traits::{
 #[derive(Debug)]
 #[allow(dead_code)]
 pub struct ConvexHullMeanderPath<'a, T: GenericVector3, MESH: HasXYZ> {
-    hull: &'a LineString2<T::Vector2>,
+    hull: &'a Vec<T::Vector2>,
     aabb: Aabb2<T::Vector2>,
     zig_vector: T::Vector2,
     number_of_zigs: u32,
@@ -40,7 +40,7 @@ where
 {
     #[allow(clippy::too_many_arguments)]
     pub fn new(
-        hull: &'a LineString2<T::Vector2>,
+        hull: &'a Vec<T::Vector2>,
         aabb: Aabb2<T::Vector2>,
         start_point: T::Vector2,
         zig_unit_vector: T::Vector2,
@@ -267,7 +267,7 @@ where
 
 #[derive(Debug)]
 pub struct ChunkIter<'a, T: GenericVector3, MESH: HasXYZ> {
-    hull: &'a LineString2<T::Vector2>,
+    hull: &'a Vec<T::Vector2>,
     chunk_id: usize,
     start_point: T::Vector2,
     #[allow(dead_code)]
@@ -290,7 +290,7 @@ pub struct ChunkIter<'a, T: GenericVector3, MESH: HasXYZ> {
 impl<'a, T: GenericVector3, MESH: HasXYZ> ChunkIter<'a, T, MESH> {
     #[allow(clippy::too_many_arguments)]
     fn new(
-        hull: &'a LineString2<T::Vector2>,
+        hull: &'a Vec<T::Vector2>,
         chunk_id: usize,
         start_point: T::Vector2,
         end_point: T::Vector2,

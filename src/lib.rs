@@ -2,6 +2,12 @@
 // Copyright (c) 2023 lacklustr@protonmail.com https://github.com/eadf
 // This file is part of the hronn crate.
 
+//! # Hronn Crate
+//!
+//! `hronn` is a Rust crate containing an experimental CNC tool path generator/mesh sampler.
+//! Work in progress.
+//!
+
 #![deny(
     rust_2018_compatibility,
     rust_2018_idioms,
@@ -22,7 +28,7 @@
 #![warn(clippy::explicit_into_iter_loop)]
 
 use crate::prelude::ConvertTo;
-use linestring::linestring_2d::{convex_hull, Aabb2, LineString2};
+use linestring::linestring_2d::{convex_hull, Aabb2};
 use vector_traits::num_traits::real::Real;
 use vector_traits::{GenericScalar, GenericVector2, GenericVector3, HasXYZ};
 
@@ -196,7 +202,7 @@ where
 /// Build a convex hull from the point cloud, then build an AABB from that.
 pub fn generate_convex_hull_then_aabb<T: GenericVector2, MESH: HasXYZ>(
     point_cloud: &[MESH],
-) -> Result<(Aabb2<T>, LineString2<T>), HronnError>
+) -> Result<(Aabb2<T>, Vec<T>), HronnError>
 where
     MESH: ConvertTo<T::Vector3>,
 {
@@ -211,14 +217,14 @@ where
             v
         })
         .collect();
-    let convex_hull = convex_hull::graham_scan(&point_cloud);
+    let convex_hull = convex_hull::graham_scan(&point_cloud)?;
     Ok((aabb, convex_hull))
 }
 
 /// Build an AABB from the point cloud, then build a convex hull from that aabb.
 pub fn generate_aabb_then_convex_hull<T: GenericVector2, MESH: HasXYZ>(
     point_cloud: &[MESH],
-) -> Result<(Aabb2<T>, LineString2<T>), HronnError>
+) -> Result<(Aabb2<T>, Vec<T>), HronnError>
 where
     MESH: ConvertTo<T::Vector3>,
 {
@@ -228,6 +234,9 @@ where
         let v = v.to().to_2d();
         aabb.update_with_point(v);
     }
-    let convex_hull = LineString2(aabb.convex_hull().unwrap());
-    Ok((aabb, convex_hull))
+    Ok((
+        aabb,
+        aabb.convex_hull()
+            .ok_or_else(|| HronnError::InvalidData("No data found for convex hull".to_string()))?,
+    ))
 }

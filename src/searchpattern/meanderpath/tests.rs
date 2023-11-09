@@ -3,7 +3,7 @@
 // This file is part of the hronn crate.
 
 use crate::{prelude::*, searchpattern::meanderpath::ConvexHullMeanderPath};
-use linestring::linestring_2d::{convex_hull, Aabb2, LineString2};
+use linestring::linestring_2d::{convex_hull, Aabb2};
 
 #[allow(unused_imports)]
 use rayon::iter::IntoParallelIterator;
@@ -18,7 +18,7 @@ use vector_traits::{
 fn test_meander_path_1() -> Result<(), HronnError> {
     let mut aabb = Aabb2::<Vec2>::new(vec2(0.0, 0.0));
     aabb.update_with_point(vec2(10.0, 10.0));
-    let hull = LineString2(aabb.convex_hull().unwrap());
+    let hull = aabb.convex_hull().unwrap();
 
     println!("hull:{:?}", hull);
     let zag_unit_vector = vec2(1.0, 0.0);

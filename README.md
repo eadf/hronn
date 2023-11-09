@@ -7,7 +7,7 @@
 
 # Hrǫnn
 
-An experimental CNC toolpath generator/mesh sampler. Work in progress.
+An experimental CNC tool-path generator/mesh sampler. Work in progress.
 
 ![Example Image](https://github.com/eadf/hallr/assets/655495/af3a0456-1c9c-43b1-a1eb-3512c29fd5b2)
 

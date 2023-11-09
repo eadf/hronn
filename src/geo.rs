@@ -12,7 +12,7 @@ use std::{
 };
 use vector_traits::{
     glam::{DVec2, DVec3, Vec2, Vec3},
-    num_traits::real::Real,
+    num_traits::Float,
     GenericScalar, GenericVector2, GenericVector3, HasXY, HasXYZ,
 };
 

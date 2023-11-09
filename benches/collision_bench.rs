@@ -1,7 +1,7 @@
 use hronn::prelude::*;
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use linestring::linestring_2d::{Aabb2, LineString2};
+use linestring::linestring_2d::Aabb2;
 use rand::{rngs::StdRng, Rng, SeedableRng};
 use std::{env, path::Path};
 use vector_traits::glam::{DVec2, DVec3, Vec3};
@@ -10,7 +10,7 @@ fn original_triangles_large(c: &mut Criterion) {
     let probe_radius = 1.0;
     let minimum_z = 0.0;
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let filename = Path::new(&manifest_dir).join("benches/sample.obj");
+    let filename = Path::new(&manifest_dir).join("benches").join("sample.obj");
     let mesh_analyzer = MeshAnalyzerBuilder::<DVec3, Vec3>::default()
         .load_from_obj(&filename)
         .unwrap()
@@ -19,7 +19,7 @@ fn original_triangles_large(c: &mut Criterion) {
     let probe = BallNoseProbe::new(&mesh_analyzer, probe_radius).unwrap();
     let config = SearchPatternConfig::<DVec3, Vec3>::new(&probe, minimum_z);
     let aabb = Aabb2::with_points(&[DVec2::new(-4.5, -4.50), DVec2::new(5.5, 5.5)]);
-    let convex_hull = LineString2::from(aabb);
+    let convex_hull = Vec::from(aabb);
     let pattern = MeanderPattern::new(aabb, convex_hull, 0.1).unwrap();
     let mut g = c.benchmark_group("edge_tests");
     g.sample_size(10)
@@ -37,7 +37,7 @@ fn split_triangles_large(c: &mut Criterion) {
     let probe_radius: f64 = 1.0;
     let minimum_z = 0.0;
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let filename = Path::new(&manifest_dir).join("benches/sample.obj");
+    let filename = Path::new(&manifest_dir).join("benches").join("sample.obj");
     let mesh_analyzer = MeshAnalyzerBuilder::<DVec3, Vec3>::default()
         .load_from_obj(&filename)
         .unwrap()
@@ -48,7 +48,7 @@ fn split_triangles_large(c: &mut Criterion) {
     let probe = BallNoseProbe::new(&mesh_analyzer, probe_radius).unwrap();
     let config = SearchPatternConfig::<DVec3, Vec3>::new(&probe, minimum_z);
     let aabb = Aabb2::with_points(&[DVec2::new(-4.5, -4.50), DVec2::new(5.5, 5.5)]);
-    let convex_hull = LineString2::from(aabb);
+    let convex_hull = Vec::from(aabb);
     let pattern = MeanderPattern::new(aabb, convex_hull, 0.1).unwrap();
     let mut g = c.benchmark_group("edge_tests");
     g.sample_size(10)
@@ -67,7 +67,7 @@ fn original_triangles_small(c: &mut Criterion) {
     let probe_radius = 0.5;
     let minimum_z = 0.0;
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let filename = Path::new(&manifest_dir).join("benches/sample.obj");
+    let filename = Path::new(&manifest_dir).join("benches").join("sample.obj");
     let mesh_analyzer = MeshAnalyzerBuilder::<DVec3, Vec3>::default()
         .load_from_obj(&filename)
         .unwrap()
@@ -76,7 +76,7 @@ fn original_triangles_small(c: &mut Criterion) {
     let probe = BallNoseProbe::new(&mesh_analyzer, probe_radius).unwrap();
     let config = SearchPatternConfig::<DVec3, Vec3>::new(&probe, minimum_z);
     let aabb = Aabb2::with_points(&[DVec2::new(-4.5, -4.50), DVec2::new(5.5, 5.5)]);
-    let convex_hull = LineString2::from(aabb);
+    let convex_hull = Vec::from(aabb);
     let pattern = MeanderPattern::new(aabb, convex_hull, 0.1).unwrap();
     let mut g = c.benchmark_group("edge_tests");
 
@@ -96,7 +96,7 @@ fn split_triangles_small(c: &mut Criterion) {
     let probe_radius = 0.5;
     let minimum_z = 0.0;
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
-    let filename = Path::new(&manifest_dir).join("benches/sample.obj");
+    let filename = Path::new(&manifest_dir).join("benches").join("sample.obj");
     let mesh_analyzer = MeshAnalyzerBuilder::<DVec3, Vec3>::default()
         .load_from_obj(&filename)
         .unwrap()
@@ -107,7 +107,7 @@ fn split_triangles_small(c: &mut Criterion) {
     let probe = BallNoseProbe::new(&mesh_analyzer, probe_radius).unwrap();
     let config = SearchPatternConfig::<DVec3, Vec3>::new(&probe, minimum_z);
     let aabb = Aabb2::with_points(&[DVec2::new(-4.5, -4.50), DVec2::new(5.5, 5.5)]);
-    let pattern = MeanderPattern::new(aabb, LineString2(aabb.convex_hull().unwrap()), 0.1).unwrap();
+    let pattern = MeanderPattern::new(aabb, aabb.convex_hull().unwrap(), 0.1).unwrap();
     let mut g = c.benchmark_group("edge_tests");
     g.sample_size(10)
         .bench_function("split_triangles_small", |b| {
