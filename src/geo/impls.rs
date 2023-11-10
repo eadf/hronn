@@ -2,13 +2,10 @@
 // Copyright (c) 2023 lacklustr@protonmail.com https://github.com/eadf
 // This file is part of the hronn crate.
 
+//! A module containing boiler-plate implementations of standard traits such as Default, Debug etc etc
+
 use super::*;
-//use std::hash::{Hash,};
-use vector_traits::{
-    //glam::{DVec2, Vec2},
-    GenericVector2,
-    GenericVector3,
-};
+use vector_traits::{GenericVector2, GenericVector3};
 impl<T: GenericVector2> Debug for Circle<T> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "Sphere(c:{:?},r:{})", self.center, self.radius)

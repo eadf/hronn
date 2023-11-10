@@ -1,6 +1,6 @@
 [package]
 name = "hronn"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "An experimental CNC toolpath generator"
 readme = "README.md"
@@ -8,24 +8,24 @@ repository = "https://github.com/eadf/hronn"
 license = "AGPL-3.0-or-later"
 
 [dependencies]
+vector-traits = { version = "0.3.0", features = ["glam"] }
+linestring = "0.11.0"
+krakel = {version = "0.2.0", features = ["glam"]}
 thiserror = "1.0.50"
 vob="3.0.3"
 rayon = "1.8.0"
 itertools = "0.11.0"
-smallvec = "1.11.1"
-linestring = "0.10.2"
-vector-traits = { version = "0.2.0", features = ["glam"] }
-spade = "2.2.0"
-krakel = {version = "0.2.0", features = ["glam"]}
+smallvec = "1.11.2"
+spade = "2.3.0"
 
 [features]
 default = ["glam"]
 glam = ["vector-traits/glam"] # nothing will work without this at the moment
 
 [dev-dependencies]
+vector-traits = { version = "0.3", features = ["glam"] }
 criterion = "0.5.1"
 rand = "0.8.5"
-vector-traits = { version = "0.2", features = ["glam"] }
 
 [[bench]]
 name = "collision_bench"

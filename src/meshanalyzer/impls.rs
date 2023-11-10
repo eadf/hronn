@@ -2,6 +2,8 @@
 // Copyright (c) 2023 lacklustr@protonmail.com https://github.com/eadf
 // This file is part of the hronn crate.
 
+//! A module containing boiler-plate implementations of standard traits such as Default, From etc etc
+
 use super::{Data, MeshAnalyzer};
 use crate::{geo::ConvertTo, meshanalyzer::SearchResult, prelude::MeshAnalyzerBuilder};
 use vector_traits::{approx, GenericVector3, HasXYZ};
