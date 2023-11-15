@@ -11,7 +11,7 @@ use std::{
     ops::Sub,
 };
 use vector_traits::{
-    glam::{DVec2, DVec3, Vec2, Vec3},
+    glam::{DVec2, DVec3, Vec2, Vec3, Vec3A},
     num_traits::Float,
     GenericScalar, GenericVector2, GenericVector3, HasXY, HasXYZ,
 };
@@ -440,7 +440,25 @@ impl ConvertTo<Vec3> for Vec3 {
     }
 }
 
+impl ConvertTo<Vec3A> for Vec3A {
+    #[inline(always)]
+    fn to(self) -> Self {
+        self
+    }
+}
+
 impl ConvertTo<DVec3> for Vec3 {
+    #[inline(always)]
+    fn to(self) -> DVec3 {
+        DVec3 {
+            x: self.x as f64,
+            y: self.y as f64,
+            z: self.z as f64,
+        }
+    }
+}
+
+impl ConvertTo<DVec3> for Vec3A {
     #[inline(always)]
     fn to(self) -> DVec3 {
         DVec3 {
@@ -458,6 +476,39 @@ impl ConvertTo<Vec3> for DVec3 {
             x: self.x as f32,
             y: self.y as f32,
             z: self.z as f32,
+        }
+    }
+}
+
+impl ConvertTo<Vec3A> for DVec3 {
+    #[inline(always)]
+    fn to(self) -> Vec3A {
+        Vec3A {
+            x: self.x as f32,
+            y: self.y as f32,
+            z: self.z as f32,
+        }
+    }
+}
+
+impl ConvertTo<Vec3A> for Vec3 {
+    #[inline(always)]
+    fn to(self) -> Vec3A {
+        Vec3A {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+        }
+    }
+}
+
+impl ConvertTo<Vec3> for Vec3A {
+    #[inline(always)]
+    fn to(self) -> Vec3 {
+        Vec3 {
+            x: self.x,
+            y: self.y,
+            z: self.z,
         }
     }
 }

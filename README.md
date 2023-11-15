@@ -13,3 +13,10 @@ An experimental CNC tool-path generator/mesh sampler. Work in progress.
 
 ## License
 AGPL-3.0-or-later
+
+## Contributing
+
+We welcome contributions from the community.
+Feel free to submit pull requests or report issues on our GitHub repository.
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you,
+as defined in AGPL-3.0, without any additional terms or conditions.

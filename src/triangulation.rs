@@ -89,10 +89,10 @@ where
             max.y() - height,
             MESH::Scalar::ZERO,
         );
-        println!(
+        /*println!(
             "Big triangle: {:?},{:?},{:?},",
             big_triangle_a, big_triangle_b, big_triangle_c
-        );
+        );*/
         let mut tris = DelaunayContainer {
             delaunay: DelaunayTriangulation::<DelaunayPos<MESH>>::new(),
             vertices: Vec::<MESH>::with_capacity(4 + convex_hull.len() + vertices.len()),

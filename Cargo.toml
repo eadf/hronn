@@ -8,13 +8,19 @@ repository = "https://github.com/eadf/hronn"
 license = "AGPL-3.0-or-later"
 
 [dependencies]
-vector-traits = { version = "0.3.0", features = ["glam"] }
-linestring = "0.11.0"
-krakel = {version = "0.2.0", features = ["glam"]}
+#vector-traits = { version = "0.3.0", features = ["glam"] }
+#vector-traits = { path = "../vector-traits", features = ["glam"] }
+vector-traits = { git = "https://github.com/eadf/vector-traits.git", features = ["glam"] }
+#linestring = "0.11.0"
+#linestring = {path="../linestring.rs"}
+linestring = {git="https://github.com/eadf/linestring.rs.git"}
+#krakel = {version = "0.2.0", features = ["glam"]}
+#krakel = {path = "../krakel", features = ["vector-traits", "glam"]}
+krakel = {git = "https://github.com/eadf/krakel.git", features = ["vector-traits", "glam"]}
 thiserror = "1.0.50"
 vob="3.0.3"
 rayon = "1.8.0"
-itertools = "0.11.0"
+itertools = "0.12.0"
 smallvec = "1.11.2"
 spade = "2.3.0"
 
@@ -23,7 +29,6 @@ default = ["glam"]
 glam = ["vector-traits/glam"] # nothing will work without this at the moment
 
 [dev-dependencies]
-vector-traits = { version = "0.3", features = ["glam"] }
 criterion = "0.5.1"
 rand = "0.8.5"
 

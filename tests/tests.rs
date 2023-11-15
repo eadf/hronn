@@ -95,7 +95,7 @@ fn test_collision_ball_glam_f64() -> Result<(), HronnError> {
 fn test_collision_ball_glam_f32() -> Result<(), HronnError> {
     use hronn::prelude::*;
     use std::{env, path::Path};
-    use vector_traits::glam::Vec3;
+    use vector_traits::glam::{Vec3, Vec3A};
 
     //let relative_filename = "flat_edge.obj",
     //let relative_filename = "sample.obj",
@@ -109,7 +109,7 @@ fn test_collision_ball_glam_f32() -> Result<(), HronnError> {
     let minimum_z = 0.0;
     let step = 0.3699999749660492;
 
-    type ProcessingType = Vec3;
+    type ProcessingType = Vec3A;
     type MeshType = Vec3;
 
     let manifest_dir = env::var("CARGO_MANIFEST_DIR").unwrap();
