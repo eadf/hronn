@@ -11,7 +11,7 @@ use std::{
     ops::Sub,
 };
 use vector_traits::{
-    glam::{DVec2, DVec3, Vec2, Vec3, Vec3A},
+    glam::{dvec2, dvec3, vec2, vec3, vec3a, DVec2, DVec3, Vec2, Vec3, Vec3A},
     num_traits::Float,
     GenericScalar, GenericVector2, GenericVector3, HasXY, HasXYZ,
 };
@@ -450,66 +450,42 @@ impl ConvertTo<Vec3A> for Vec3A {
 impl ConvertTo<DVec3> for Vec3 {
     #[inline(always)]
     fn to(self) -> DVec3 {
-        DVec3 {
-            x: self.x as f64,
-            y: self.y as f64,
-            z: self.z as f64,
-        }
+        dvec3(self.x as f64, self.y as f64, self.z as f64)
     }
 }
 
 impl ConvertTo<DVec3> for Vec3A {
     #[inline(always)]
     fn to(self) -> DVec3 {
-        DVec3 {
-            x: self.x as f64,
-            y: self.y as f64,
-            z: self.z as f64,
-        }
+        dvec3(self.x as f64, self.y as f64, self.z as f64)
     }
 }
 
 impl ConvertTo<Vec3> for DVec3 {
     #[inline(always)]
     fn to(self) -> Vec3 {
-        Vec3 {
-            x: self.x as f32,
-            y: self.y as f32,
-            z: self.z as f32,
-        }
+        vec3(self.x as f32, self.y as f32, self.z as f32)
     }
 }
 
 impl ConvertTo<Vec3A> for DVec3 {
     #[inline(always)]
     fn to(self) -> Vec3A {
-        Vec3A {
-            x: self.x as f32,
-            y: self.y as f32,
-            z: self.z as f32,
-        }
+        vec3a(self.x as f32, self.y as f32, self.z as f32)
     }
 }
 
 impl ConvertTo<Vec3A> for Vec3 {
     #[inline(always)]
     fn to(self) -> Vec3A {
-        Vec3A {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
+        vec3a(self.x, self.y, self.z)
     }
 }
 
 impl ConvertTo<Vec3> for Vec3A {
     #[inline(always)]
     fn to(self) -> Vec3 {
-        Vec3 {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
+        vec3(self.x, self.y, self.z)
     }
 }
 
@@ -530,20 +506,14 @@ impl ConvertTo<Vec2> for Vec2 {
 impl ConvertTo<DVec2> for Vec2 {
     #[inline(always)]
     fn to(self) -> DVec2 {
-        DVec2 {
-            x: self.x as f64,
-            y: self.y as f64,
-        }
+        dvec2(self.x as f64, self.y as f64)
     }
 }
 
 impl ConvertTo<Vec2> for DVec2 {
     #[inline(always)]
     fn to(self) -> Vec2 {
-        Vec2 {
-            x: self.x as f32,
-            y: self.y as f32,
-        }
+        vec2(self.x as f32, self.y as f32)
     }
 }
 
