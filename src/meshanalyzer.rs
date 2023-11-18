@@ -5,7 +5,6 @@ mod impls;
 
 use super::ProbeMode;
 use crate::{
-    //ffi::FFIVector3,
     geo,
     geo::ConvertTo,
     obj,

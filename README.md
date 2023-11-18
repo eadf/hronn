@@ -3,7 +3,6 @@
 [![Workflow](https://github.com/eadf/hronn/workflows/Rust/badge.svg)](https://github.com/eadf/hronn.rs/workflows/Rust/badge.svg)
 [![dependency status](https://deps.rs/crate/hronn/0.3.0/status.svg)](https://deps.rs/crate/hronn/0.3.0)
 ![license](https://img.shields.io/crates/l/hronn)
-[![](https://img.shields.io/static/v1?label=Sponsor&message=%E2%9D%A4&logo=GitHub&color=%23fe8e86)](https://github.com/sponsors/eadf)
 
 # Hrǫnn
 
