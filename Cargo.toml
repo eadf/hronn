@@ -16,7 +16,7 @@ vob="3.0.3"
 rayon = "1.8.0"
 itertools = "0.12.0"
 smallvec = "1.11.2"
-spade = "2.3.1"
+spade = "2.4.0"
 
 [features]
 default = ["glam"]

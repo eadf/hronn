@@ -32,12 +32,23 @@ impl<T: GenericVector3, MESH: HasXYZ> TriangleMetadata<T, MESH>
 where
     MESH: ConvertTo<T>,
 {
-    pub fn new_for_ball_nose(probe_radius: T::Scalar, p0: MESH, p1: MESH, p2: MESH) -> Self {
+    pub fn new_for_ball_nose(
+        probe_radius: T::Scalar,
+        p0: MESH,
+        p1: MESH,
+        p2: MESH,
+    ) -> Result<Self, HronnError> {
         let p0: T = p0.to();
         let p1: T = p1.to();
         let p2: T = p2.to();
 
-        let u_normal = triangle_normal(p0, p1, p2).safe_normalize().unwrap();
+        let u_normal = triangle_normal(p0, p1, p2)
+            .safe_normalize()
+            .ok_or_else(|| {
+                HronnError::InvalidData(
+                    "Could not normalize normal, is the mesh triangulated?".to_string(),
+                )
+            })?;
         let m_factor = m_factor_from_plane_unit_normal::<T>(u_normal);
 
         let (p0_prim_xy, p1_prim_xy, p2_prim_xy) = {
@@ -52,24 +63,29 @@ where
         let area = Area2D::new(p0_prim_xy, p1_prim_xy, p2_prim_xy);
         let pft = PlaneFromTriangle::new_from_normal(u_normal, p0);
         if area.value().abs() > T::Scalar::EPSILON {
-            Self {
+            Ok(Self {
                 delta_z: m_factor * probe_radius,
                 plane: Some(PlaneMetadata::<T::Vector2> {
                     pft,
                     translated_triangle: [p0_prim_xy, p1_prim_xy, p2_prim_xy],
                 }),
                 _pdm: PhantomData,
-            }
+            })
         } else {
-            Self {
+            Ok(Self {
                 delta_z: m_factor * probe_radius,
                 plane: None,
                 _pdm: PhantomData,
-            }
+            })
         }
     }
 
-    pub fn new_for_square_end(probe_radius: T::Scalar, p0: T, p1: T, p2: T) -> Self {
+    pub fn new_for_square_end(
+        probe_radius: T::Scalar,
+        p0: T,
+        p1: T,
+        p2: T,
+    ) -> Result<Self, HronnError> {
         let normal = triangle_normal::<T>(p0, p1, p2);
         let u_normal_3d = normal.safe_normalize().unwrap();
         let m = m_from_plane_unit_normal::<T>(u_normal_3d);
@@ -85,34 +101,34 @@ where
                 let (p0_prim_xy, p1_prim_xy, p2_prim_xy) =
                     (p0_2d + xy_offset, p1_2d + xy_offset, p2_2d + xy_offset);
                 let pft = PlaneFromTriangle::new_from_normal(u_normal_3d, p0);
-                return Self {
+                return Ok(Self {
                     delta_z: m * probe_radius,
                     plane: Some(PlaneMetadata {
                         pft,
                         translated_triangle: [p0_prim_xy, p1_prim_xy, p2_prim_xy],
                     }),
                     _pdm: PhantomData,
-                };
+                });
             }
         } else {
             //println!("The triangle {p0} {p1} {p2} had no suitable plane. norm:{}", normal.xy());
             let area = Area2D::new(p0_2d, p1_2d, p2_2d);
             if area.value().abs() > T::Scalar::EPSILON {
-                return Self {
+                return Ok(Self {
                     delta_z: m * probe_radius,
                     plane: Some(PlaneMetadata {
                         pft: PlaneFromTriangle::new_from_z_coord(p0.z()),
                         translated_triangle: [p0_2d, p1_2d, p2_2d],
                     }),
                     _pdm: PhantomData,
-                };
+                });
             }
         }
-        Self {
+        Ok(Self {
             delta_z: m * probe_radius,
             plane: None,
             _pdm: PhantomData,
-        }
+        })
     }
 }
 
@@ -178,7 +194,7 @@ where
                 mesh_analyzer.vertices.as_ref(),
                 mesh_analyzer.indices.as_ref(),
                 probe_radius,
-            ),
+            )?,
             bound_mesh_analyzer: mesh_analyzer,
         })
     }
@@ -235,7 +251,7 @@ where
                 mesh_analyzer.vertices.as_ref(),
                 mesh_analyzer.indices.as_ref(),
                 probe_radius,
-            ),
+            )?,
             bound_mesh_analyzer: mesh_analyzer,
         })
     }

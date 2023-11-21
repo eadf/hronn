@@ -117,7 +117,7 @@ pub(super) fn shared_square_end_precompute_logic<T: GenericVector3, MESH: HasXYZ
     vertices: &[MESH],
     triangles: &[usize],
     probe_radius: T::Scalar,
-) -> Vec<TriangleMetadata<T, MESH>>
+) -> Result<Vec<TriangleMetadata<T, MESH>>, HronnError>
 where
     MESH: ConvertTo<T>,
 {
@@ -313,7 +313,7 @@ pub(super) fn shared_ball_nose_precompute_logic<T: GenericVector3, MESH: HasXYZ 
     vertices: &[MESH],
     indices: &[usize],
     probe_radius: T::Scalar,
-) -> Vec<TriangleMetadata<T, MESH>> {
+) -> Result<Vec<TriangleMetadata<T, MESH>>, HronnError> {
     indices
         .as_ref()
         .chunks(3)
@@ -325,7 +325,7 @@ pub(super) fn shared_ball_nose_precompute_logic<T: GenericVector3, MESH: HasXYZ 
                 vertices[triangle[2]],
             )
         })
-        .collect()
+        .collect::<Result<Vec<_>, HronnError>>()
 }
 
 // this function must use the CollisionFn signature
