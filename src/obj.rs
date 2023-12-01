@@ -7,6 +7,7 @@ use crate::HronnError::ParseFloatError;
 use std::{
     fs::File,
     io::{BufRead, BufReader, Write},
+    path,
 };
 use vector_traits::HasXYZ;
 
@@ -155,8 +156,10 @@ impl<MESH: HasXYZ> Obj<MESH> {
         Ok(())
     }
 
-    pub fn new_from_file(filename: &std::path::Path) -> Result<Obj<MESH>, HronnError> {
-        let file = File::open(filename)?;
+    pub fn new_from_file(
+        filename: impl AsRef<path::Path> + std::fmt::Debug,
+    ) -> Result<Obj<MESH>, HronnError> {
+        let file = File::open(filename.as_ref())?;
         let reader = BufReader::new(file);
 
         let mut name = String::new();
@@ -200,7 +203,7 @@ impl<MESH: HasXYZ> Obj<MESH> {
                     } else {
                         return Err(HronnError::NotTriangulated(format!(
                             "The file {:?} did not contain a triangulated mesh",
-                            filename
+                            filename.as_ref()
                         )));
                     }
                     //faces.push(face_indices.iter().map(|v| v - 1).collect());

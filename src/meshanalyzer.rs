@@ -60,7 +60,7 @@ where
     T: ConvertTo<MESH>,
 {
     /// Insert the mesh as owned data from an .obj file.
-    pub fn load_from_obj(mut self, filename: &Path) -> Result<Self, HronnError> {
+    pub fn load_from_obj(mut self, filename: impl AsRef<Path> + Debug) -> Result<Self, HronnError> {
         let obj = obj::Obj::new_from_file(filename)?;
 
         self.data_vertices = Some(Data::Owned(obj.vertices));
