@@ -10,7 +10,7 @@ use spade::{
     handles::FixedVertexHandle, DelaunayTriangulation, HasPosition, Point2, Triangulation,
 };
 use vector_traits::{
-    num_traits::AsPrimitive, GenericScalar, GenericVector2, GenericVector3, HasXYZ,
+    num_traits::AsPrimitive, GenericScalar, GenericVector2, GenericVector3, HasXY, HasXYZ,
 };
 
 /// This represents a 2.5d point, used with the space crate.
@@ -74,12 +74,12 @@ where
     T: ConvertTo<MESH>,
     T::Scalar: AsPrimitive<MESH::Scalar>,
 {
-    if let Some((min, max, width, height)) = aabb2.extents() {
+    if let Some((min, max, delta)) = aabb2.extents() {
         let min = min.to_3d(T::Scalar::ZERO).to();
         let max = max.to_3d(T::Scalar::ZERO).to();
-        let width: MESH::Scalar = width.as_();
+        let width: MESH::Scalar = delta.x().as_();
         let width = width * 10.0.into();
-        let height: MESH::Scalar = height.as_();
+        let height: MESH::Scalar = delta.y().as_();
         let height = height * 10.0.into();
 
         let big_triangle_a = MESH::new_3d(min.x() - width, min.y() - height, MESH::Scalar::ZERO);

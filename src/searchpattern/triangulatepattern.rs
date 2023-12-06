@@ -263,11 +263,11 @@ where
         hull_3d: Vec<MESH>,
         vertices: Vec<Vec<MESH>>,
     ) -> Result<(Vec<MESH>, Vec<usize>), HronnError> {
-        if let Some((min, max, width, height)) = aabb2.extents() {
+        if let Some((min, max, delta)) = aabb2.extents() {
             let min = min.to_3d(T::Scalar::ZERO).to();
             let max = max.to_3d(T::Scalar::ZERO).to();
-            let width: MESH::Scalar = width.as_();
-            let height: MESH::Scalar = height.as_();
+            let width: MESH::Scalar = delta.x().as_();
+            let height: MESH::Scalar = delta.y().as_();
 
             let width = width * (20.0.into());
             let height = height * (20.0.into());
